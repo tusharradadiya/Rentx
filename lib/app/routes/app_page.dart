@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:rentx/app/screen/add_product/binding/add_product_binding.dart';
+import 'package:rentx/app/screen/add_product/view/add_product_view.dart';
 import 'package:rentx/app/screen/home/binding/home_binding.dart';
 import 'package:rentx/app/screen/home/view/home_view.dart';
 import 'package:rentx/app/screen/login/binding/login_binding.dart';
@@ -32,8 +34,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () =>  HomeView(),
+      page: () => HomeView(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.addProduct,
+      page: () => AddProductView(),
+      binding: AddProductBinding(),
     ),
   ];
 }
