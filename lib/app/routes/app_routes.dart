@@ -7,6 +7,8 @@ abstract class Routes {
   static const signUpScreen = _Paths.signUp;
   static const homeScreen = _Paths.HOME;
   static const addProductView = _Paths.addProduct;
+  static const popularProductView = _Paths.popularProduct;
+  static const productDetailView = _Paths.productDetail;
 }
 
 abstract class _Paths {
@@ -16,4 +18,6 @@ abstract class _Paths {
   static const signUp = '/sign-up';
   static const HOME = '/home';
   static const addProduct = '/add-product';
+  static const popularProduct = '/popular-product';
+  static const productDetail = '/product-detail';
 }

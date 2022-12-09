@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:rentx/app/model/product_model.dart';
 
-class HomeController extends GetxController {
+class PopularProductController extends GetxController
+{
+
   final CollectionReference productCollection =
-      FirebaseFirestore.instance.collection('Product');
+  FirebaseFirestore.instance.collection('Product');
 
   var productList = <ProductModel>[].obs;
 
@@ -28,6 +30,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     fetchProductData();
+    print(Get.arguments);
     super.onInit();
   }
 }

@@ -5,6 +5,10 @@ import 'package:rentx/app/screen/home/binding/home_binding.dart';
 import 'package:rentx/app/screen/home/view/home_view.dart';
 import 'package:rentx/app/screen/login/binding/login_binding.dart';
 import 'package:rentx/app/screen/login/view/login_screen.dart';
+import 'package:rentx/app/screen/popular_product/binding/popular_binding.dart';
+import 'package:rentx/app/screen/popular_product/view/popular_product.dart';
+import 'package:rentx/app/screen/product_detail/binding/product_detail_binding.dart';
+import 'package:rentx/app/screen/product_detail/view/product_detail_view.dart';
 import 'package:rentx/app/screen/sign_up/binding/sign_up_binding.dart';
 import 'package:rentx/app/screen/sign_up/view/sign_up_screen.dart';
 import 'package:rentx/app/screen/splash_screen/binding/splash_screen_binding.dart';
@@ -34,7 +38,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => HomeView(),
+      page: () => const HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(
@@ -42,5 +46,15 @@ class AppPages {
       page: () => AddProductView(),
       binding: AddProductBinding(),
     ),
+    GetPage(
+      name: _Paths.popularProduct,
+      page: () => const PopularProductView(),
+      binding: PopularProductBinding(),
+    ),
+    GetPage(
+      name: _Paths.productDetail,
+      page: () =>  ProductDetailView(),
+      binding: ProductDetailBinding(),
+    )
   ];
 }

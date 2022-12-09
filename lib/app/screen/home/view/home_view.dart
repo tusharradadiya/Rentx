@@ -11,7 +11,67 @@ class HomeView extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(),
+      drawer:  Drawer(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const CircleAvatar(),
+                    const SizedBox(width:10.0),
+                    Text(
+                      'Vijay Laheri',
+                      style: GoogleFonts.roboto(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500),
+                    ),
+
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                Divider(
+                  thickness: 1.0,
+                  color: Colors.grey,
+                ),
+                ListTile (
+                  leading: Icon(Icons.home),
+                  title:  Text(
+                    'Home',
+                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.production_quantity_limits),
+                  title:  Text(
+                    'Add Product',
+                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.bookmark_border      ),
+                  title:  Text(
+                    'My Order',
+                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
         title: const Text('RentX'),
@@ -170,12 +230,17 @@ class HomeView extends GetWidget<HomeController> {
                       fontWeight: FontWeight.w500),
                 ),
                 const Spacer(),
-                Text(
-                  'See All',
-                  style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(Routes.popularProductView);
+                  },
+                  child: Text(
+                    'See All',
+                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
               ],
             ),
@@ -183,19 +248,24 @@ class HomeView extends GetWidget<HomeController> {
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: SizedBox(
                 height: 195,
-                child: ListView.builder(
+                child: Obx(() => ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: controller.productList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return productCard(
+
                         controller.productList[index].productImage,
                         controller.productList[index].productName,
                         controller.productList[index].location,
-                        controller.productList[index].rating);
+                        controller.productList[index].rating,
+                      () {
+                        Get.toNamed(Routes.productDetailView,arguments: controller.productList[index]);
+                      },
+                    );
                   },
-                ),
+                )),
               ),
             )
           ],
@@ -212,69 +282,72 @@ class HomeView extends GetWidget<HomeController> {
 }
 
 Widget productCard(
-    String productImage, String productname, String location, String rating) {
-  return SizedBox(
-    width: ScreenSize.screenSize.width * 0.45,
-    child: Card(
-      elevation: 10.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              productImage,
-              width: ScreenSize.screenSize.width * 0.40,
-              height: 80,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 10.0),
-            Text(
-              productname,
-              style: GoogleFonts.roboto(
-                  color: Colors.black,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0),
-              child: Text(
-                location,
+    String productImage, String productname, String location, String rating,Function()? onTap) {
+  return GestureDetector(
+    onTap: onTap,
+    child: SizedBox(
+      width: ScreenSize.screenSize.width * 0.45,
+      child: Card(
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(
+                productImage,
+                width: ScreenSize.screenSize.width * 0.40,
+                height: 80,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 10.0),
+              Text(
+                productname,
                 style: GoogleFonts.roboto(
                     color: Colors.black,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w400),
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w500),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0),
-              child: Text(
-                '₹ 1000/ Month',
-                style: GoogleFonts.roboto(
-                    color: Colors.black,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                  size: 20,
-                ),
-                const SizedBox(width: 5.0),
-                Text(
-                  rating,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: Text(
+                  location,
                   style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 12.0,
                       fontWeight: FontWeight.w400),
                 ),
-              ],
-            )
-          ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: Text(
+                  '₹ 1000/ Month',
+                  style: GoogleFonts.roboto(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.star,
+                    color: Colors.orange,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 5.0),
+                  Text(
+                    rating,
+                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     ),

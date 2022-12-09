@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rentx/app/domain/screen_size.dart';
 import 'package:rentx/app/screen/add_product/controller/add_product_controller.dart';
 import 'package:rentx/app/widget/custom_textfield.dart';
 
@@ -18,42 +19,81 @@ class AddProductView extends GetWidget<AddProductController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(children: [
-          ...List.generate(
-              pages.length,
-              (index) => Obx(
-                    () => AnimatedContainer(
-                      duration: 600.milliseconds,
-                      margin: const EdgeInsets.only(right: 8),
-                      height: 4,
-                      width: MediaQuery.of(context).size.width * 0.09,
-                      color: (index < controller.currentPage ||
-                              index == controller.currentPage)
-                          ? Colors.blue
-                          //     ? Colors.blue[200]
-                          : controller.currentPage + 1 == index
-                              ? Colors.blue[200]
-                              : Colors.grey,
-                    ),
-                  )).toList()
-        ]),
+    return WillPopScope(
+      onWillPop: () async{
+        if(controller.currentPage==0)
+          {
+            Get.back();
+          }
+        else
+          {
+            controller.carouselController2.previousPage(duration: 300.milliseconds,curve: Curves.ease);
+          }
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.grey[800]),
+          backgroundColor: const Color.fromARGB(255, 250, 248, 248),
+          title: Row(children: [
+            ...List.generate(
+                pages.length,
+                (index) => Obx(
+                      () => AnimatedContainer(
+                        duration: 600.milliseconds,
+                        margin: const EdgeInsets.only(right: 8),
+                        height: 4,
+                        width: MediaQuery.of(context).size.width * 0.09,
+                        color: (index < controller.currentPage ||
+                                index == controller.currentPage)
+                            ? Colors.blue
+                            //     ? Colors.blue[200]
+                            : controller.currentPage + 1 == index
+                                ? Colors.blue[200]
+                                : Colors.grey,
+                      ),
+                    )).toList()
+          ]),
+        ),
+        body: CarouselSlider(
+            carouselController: controller.carouselController2,
+            items: pages,
+            options: CarouselOptions(
+                scrollPhysics: const NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                aspectRatio: 1.0,
+                height: double.infinity,
+                autoPlay: false,
+                initialPage: 0,
+                onPageChanged: (index, reason) {
+                  controller.currentPage = index;
+                },
+                viewportFraction: 1.0)),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 25.0),
+          child: GestureDetector(
+            onTap: () {
+                controller.nextPage();
+            },
+            child: SizedBox(
+              width: ScreenSize.screenSize.width,
+              height: 55,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                color: Colors.redAccent,
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text('Next',
+                        style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500))),
+              ),
+            ),
+          ),
+        ),
       ),
-      body: CarouselSlider(
-          carouselController: controller.carouselController2,
-          items: pages,
-          options: CarouselOptions(
-              scrollPhysics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              aspectRatio: 1.0,
-              height: double.infinity,
-              autoPlay: false,
-              initialPage: 0,
-              onPageChanged: (index, reason) {
-                controller.currentPage = index;
-              },
-              viewportFraction: 1.0)),
     );
   }
 }
@@ -67,10 +107,14 @@ class UploadPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+         Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 20.0),
           child: Text(
             "Upload photos of product you are selling ",
+            style: GoogleFonts.roboto(
+                color: Colors.black,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w500),
           ),
         ),
         const SizedBox(
@@ -231,7 +275,7 @@ class UploadPhoto extends StatelessWidget {
                                     ),
                                     isScrollControlled: true);
                               },
-                              child: Image.asset('assets/add_photo.png',
+                              child: Image.asset('assets/images/add_photo.png',
                                   width: 80, height: 80, fit: BoxFit.fill)),
                           const SizedBox(height: 16),
                           Text(
@@ -487,7 +531,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
@@ -562,6 +606,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: controller.formkey1,
@@ -569,7 +614,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 8,
+              height: 20,
             ),
             Text("General information",
                 style: GoogleFonts.roboto(
@@ -587,8 +632,13 @@ class _GeneralInformationState extends State<GeneralInformation> {
                 },
                 hintText: "Brand, model, colour, and size."),
             CustomFormField(
+                validator: (String? v) {
+                  if (v!.isEmpty) {
+                    return '* Required';
+                  }
+                },
                 controller: controller.brand,
-                label: "Brand",
+                label: "Brand *",
                 hintText: "Enter Your Brand Name"),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -600,7 +650,11 @@ class _GeneralInformationState extends State<GeneralInformation> {
                   height: 6,
                 ),
                 DropdownButtonFormField(
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      controller.condition.text=value!;
+                    });
+                  },
                   isDense: true,
                   value: controller.condition.text,
                   // style: GoogleFonts.ibmPlexSans(fontSize: 14.0,fontWeight: FontWeight.w400,color: Color(0xffAFAFAF)),
@@ -641,6 +695,11 @@ class _GeneralInformationState extends State<GeneralInformation> {
               height: 12,
             ),
             CustomFormField(
+              validator: (String? v) {
+                if (v!.isEmpty) {
+                  return '* Required';
+                }
+              },
               controller: controller.description,
               label: "Description*",
               desc: true,
@@ -665,20 +724,37 @@ class PriceDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 20.0),
               child: Text(
                 "Price details",
+                  style: GoogleFonts.roboto(
+                      color: Colors.black,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500)
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: CustomFormField(
                   controller: controller.price,
                   label: 'Price *',
-                  prefixicon: true,
                   hintText: 'Enter price',
+                  maxLength: 10,
+                  isnum: true,
+                  validator: (String? value) {
+                    if (value! == '') {
+                      return '* Required';
+                    }
+                  }),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomFormField(
+                  controller: controller.price,
+                  label: 'Address *',
+                  hintText: 'Enter Address',
                   maxLength: 10,
                   isnum: true,
                   validator: (String? value) {
@@ -721,37 +797,38 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: onTap,
-        child: Container(
-          height: 113,
-          width: 100,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: const Color(0xffF6F6F6),
-              border: Border.all(
-                  color: isSelected ? Colors.blue : Colors.transparent),
-              borderRadius: BorderRadius.circular(16.0)),
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                height: 48,
-                width: 48,
-                child: Image.asset(icon),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.ibmPlexSans(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                      color: const Color(0xff141414)),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0)
+          ),
+          elevation: 5.0,
+          child: Container(
+            height: 113,
+            width: 100,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 48,
+                  width: 48,
+                  child: Image.asset(icon),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.ibmPlexSans(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11,
+                        color: const Color(0xff141414)),
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

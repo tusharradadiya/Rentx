@@ -21,6 +21,8 @@ class LoginController extends GetxController {
 
   Future<void> handleGoogleSign() async {}
 
+
+
   Future<void> handleEmailLogIn(String email, String password) async {
     try {
       showLoading();
