@@ -2,7 +2,6 @@
 //
 //     final productModel = productModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ProductModel productModelFromJson(String str) =>
@@ -25,7 +24,7 @@ class ProductModel {
   String category;
   String id;
   String location;
-  Map price;
+  String price;
   String productImage;
   String productName;
   String quantity;

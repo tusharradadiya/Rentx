@@ -14,7 +14,9 @@ class SignUpController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  GlobalKey<FormState> formKey = GlobalKey();
+  RxBool isObsecure = false.obs;
+
+  GlobalKey<FormState> signUpformKey = GlobalKey();
 
   Future<void> handleEmailSignIn(
       String email, String password, String name) async {

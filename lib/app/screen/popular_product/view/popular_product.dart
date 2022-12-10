@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
 import 'package:rentx/app/routes/app_page.dart';
 import 'package:rentx/app/screen/home/view/home_view.dart';
@@ -11,16 +11,26 @@ class PopularProductView extends GetWidget<PopularProductController> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         Get.offNamed(Routes.homeScreen);
         return false;
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.redAccent,
+          title: const Text('Popular Product'),
+          leading: GestureDetector(
+              onTap: () {
+                Get.offNamed(Routes.homeScreen);
+              },
+              child: const Icon(Icons.arrow_back)),
+        ),
         body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
             child: Obx(
               () => GridView.builder(
-                physics: const BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: controller.productList.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -30,12 +40,14 @@ class PopularProductView extends GetWidget<PopularProductController> {
                       mainAxisSpacing: 10.0),
                   itemBuilder: (context, index) {
                     return productCard(
-                        controller.productList[index].productImage,
-                        controller.productList[index].productName,
-                        controller.productList[index].location,
-                        controller.productList[index].rating,
+                      controller.productList[index].productImage,
+                      controller.productList[index].productName,
+                      controller.productList[index].location,
+                      controller.productList[index].price,
+                      controller.productList[index].rating,
                       () {
-                        Get.toNamed(Routes.productDetailView,arguments: controller.productList[index]);
+                        Get.toNamed(Routes.productDetailView,
+                            arguments: controller.productList[index]);
                       },
                     );
                   }),

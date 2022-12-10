@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rentx/app/domain/repository/local_repository_interface.dart';
 import 'package:rentx/app/model/user_model.dart';
 import 'package:rentx/app/routes/app_page.dart';
@@ -17,11 +18,55 @@ class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  GlobalKey<FormState> formKey = GlobalKey();
+  GlobalKey<FormState> loginFormKey = GlobalKey();
 
-  Future<void> handleGoogleSign() async {}
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  RxBool isObsecure = false.obs;
 
+  Future<void> handleGoogleSign() async {
+    showLoading();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    UserModel userInfo;
+    var firebaseUser = (await _auth.signInWithCredential(credential)).user;
+    final result = await FirebaseFirestore.instance
+        .collection('User')
+        .doc(firebaseUser?.uid)
+        .get();
+    if (result.exists) {
+      userInfo = UserModel.fromSnapshot(result);
+      localRepositoryInterFace.saveUserId(firebaseUser?.uid ?? '');
+      localRepositoryInterFace.saveUser(UserModel.fromSnapshot(result));
+      localRepositoryInterFace.writeOnBoardingPageLoaded();
 
+      emailController.clear();
+      passwordController.clear();
+      Get.offNamed(Routes.homeScreen);
+    } else {
+      userInfo = UserModel.fromJson({
+        'createdAt': DateTime.now(),
+        'username': firebaseUser?.displayName,
+        'emailId': firebaseUser?.email,
+        'profileImage': firebaseUser?.photoURL,
+        'userId': firebaseUser?.uid,
+      });
+      await FirebaseFirestore.instance
+          .collection('User')
+          .doc(firebaseUser?.uid)
+          .set(userInfo.toJson());
+      localRepositoryInterFace.saveUserId(firebaseUser?.uid ?? '');
+      localRepositoryInterFace.saveUser(userInfo);
+      localRepositoryInterFace.writeOnBoardingPageLoaded();
+      emailController.clear();
+      passwordController.clear();
+      Get.offNamed(Routes.homeScreen);
+    }
+  }
 
   Future<void> handleEmailLogIn(String email, String password) async {
     try {
@@ -49,10 +94,7 @@ class LoginController extends GetxController {
       Get.offNamed(Routes.homeScreen);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      } else if (e.code == 'wrong-password') {}
     }
   }
 }

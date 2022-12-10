@@ -33,7 +33,7 @@ class CustomFormField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label),
-          SizedBox(
+          const SizedBox(
             height: 6,
           ),
           TextFormField(
@@ -65,21 +65,21 @@ class CustomFormField extends StatelessWidget {
                         child: Image.asset('assets/rupee.png',
                             width: 16, height: 16, fit: BoxFit.fill),
                       )
-                    : SizedBox(width: 15),
+                    : const SizedBox(width: 15),
                 prefixIconConstraints: BoxConstraints(
                     minWidth: prefixicon ? 16 : 0,
                     minHeight: prefixicon ? 16 : 0),
                 hintStyle: GoogleFonts.ibmPlexSans(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xffAFAFAF)),
+                    color: const Color(0xffAFAFAF)),
                 disabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey.shade600)),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black)),
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey.shade600)),
-                border: OutlineInputBorder()),
+                border: const OutlineInputBorder()),
           ),
         ],
       ),

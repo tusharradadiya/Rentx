@@ -19,7 +19,7 @@ class LocalRepositoryInterFace {
         userId: box.get(_pref_userId) ?? '',
         username: box.get(_pref_username) ?? '',
         emailId: box.get(_pref_email) ?? '',
-        createdAt: box.get(_pref_createdAt) ?? '',
+        createdAt: box.get(_pref_createdAt) ?? DateTime.now(),
         profileImage: box.get(_pref_image) ?? '');
     return user;
   }
@@ -46,5 +46,9 @@ class LocalRepositoryInterFace {
 
   bool readOnBoardingPageLoaded() {
     return box.get(_is_onboarding_shown) ?? false;
+  }
+
+  void clearAllData() {
+    box.clear();
   }
 }

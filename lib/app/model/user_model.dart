@@ -2,7 +2,7 @@
 //
 //     final userModel = userModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
@@ -21,7 +21,7 @@ class UserModel {
   DateTime createdAt;
   String username;
   String emailId;
-  String profileImage;
+  String? profileImage;
   String userId;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -31,6 +31,16 @@ class UserModel {
         profileImage: json["profileImage"],
         userId: json["userId"],
       );
+
+  factory UserModel.fromSnapshot(DocumentSnapshot<Object?> doc) {
+    Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
+    return UserModel(
+        createdAt: map['createdAt'].todate(),
+        username: map['username'] ?? '',
+        emailId: map['emailId'] ?? '',
+        profileImage: map['profileImage'] ?? '',
+        userId: map['userId'] ?? '');
+  }
 
   Map<String, dynamic> toJson() => {
         "createdAt": createdAt,

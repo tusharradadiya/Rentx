@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of 'app_page.dart';
 
 abstract class Routes {
@@ -9,6 +11,12 @@ abstract class Routes {
   static const addProductView = _Paths.addProduct;
   static const popularProductView = _Paths.popularProduct;
   static const productDetailView = _Paths.productDetail;
+  static const categoryDetailView = _Paths.categoryDetail;
+  static const myProductView = _Paths.myProduct;
+  static const orderChekoutView = _Paths.orderCheckout;
+  static const paymentView = _Paths.paymentView;
+  static const orderSuccesfullyView = _Paths.orderSuccesfully;
+  static const orderhistoryView = _Paths.orderHistory;
 }
 
 abstract class _Paths {
@@ -20,4 +28,10 @@ abstract class _Paths {
   static const addProduct = '/add-product';
   static const popularProduct = '/popular-product';
   static const productDetail = '/product-detail';
+  static const categoryDetail = '/category-detail';
+  static const myProduct = '/my-product';
+  static const orderCheckout = '/order-checkout';
+  static const paymentView = '/payment-view';
+  static const orderSuccesfully = '/order-succesfully';
+  static const orderHistory = '/order-history';
 }

@@ -1,5 +1,5 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rentx/app/domain/screen_size.dart';
@@ -19,7 +19,7 @@ class LoginScreen extends GetWidget<LoginController> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Form(
-            key: controller.formKey,
+            key: controller.loginFormKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,7 +51,9 @@ class LoginScreen extends GetWidget<LoginController> {
                   child: TextFormField(
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Please Enter Email';
+                        return 'Please Enter  Email';
+                      } else if (!EmailValidator.validate(value)) {
+                        return 'Please Enter Valid Email';
                       }
                       return null;
                     },
@@ -87,39 +89,50 @@ class LoginScreen extends GetWidget<LoginController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Enter Password';
-                      }
-                      return null;
-                    },
-                    controller: controller.passwordController,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.redAccent.withOpacity(0.10),
-                        prefixIcon: const Icon(Icons.key_outlined,
-                            color: Colors.redAccent, size: 26),
-                        isDense: true,
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(80),
-                            borderSide:
-                                const BorderSide(color: Colors.redAccent)),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(80),
-                            borderSide:
-                                const BorderSide(color: Colors.redAccent)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(80),
-                            borderSide:
-                                const BorderSide(color: Colors.redAccent)),
-                        hintText: 'Please Enter your Password'),
-                  ),
+                  child: Obx(() => TextFormField(
+                        obscureText: controller.isObsecure.value,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please Enter Password';
+                          }
+                          return null;
+                        },
+                        controller: controller.passwordController,
+                        decoration: InputDecoration(
+                            suffixIcon: GestureDetector(
+                                onTap: () {
+                                  controller.isObsecure.value =
+                                      !controller.isObsecure.value;
+                                },
+                                child: Icon(
+                                    controller.isObsecure.value
+                                        ? Icons.remove_red_eye
+                                        : Icons.remove_red_eye_outlined,
+                                    color: Colors.redAccent)),
+                            filled: true,
+                            fillColor: Colors.redAccent.withOpacity(0.10),
+                            prefixIcon: const Icon(Icons.key_outlined,
+                                color: Colors.redAccent, size: 26),
+                            isDense: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(80),
+                                borderSide:
+                                    const BorderSide(color: Colors.redAccent)),
+                            disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(80),
+                                borderSide:
+                                    const BorderSide(color: Colors.redAccent)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(80),
+                                borderSide:
+                                    const BorderSide(color: Colors.redAccent)),
+                            hintText: 'Please Enter your Password'),
+                      )),
                 ),
                 const SizedBox(height: 40.0),
                 GestureDetector(
                   onTap: () {
-                    if (controller.formKey.currentState!.validate()) {
+                    if (controller.loginFormKey.currentState!.validate()) {
                       controller.handleEmailLogIn(
                           controller.emailController.text,
                           controller.passwordController.text);
@@ -142,33 +155,38 @@ class LoginScreen extends GetWidget<LoginController> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 15.0),
-                  width: ScreenSize.screenSize.width,
-                  height: 48,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(50.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/images/google_icon.png',
-                          width: 24, height: 24, fit: BoxFit.fill),
-                      const SizedBox(width: 40.0),
-                      Text('Sign in with Google',
-                          style: GoogleFonts.roboto(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500))
-                    ],
+                GestureDetector(
+                  onTap: () {
+                    controller.handleGoogleSign();
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 15.0),
+                    width: ScreenSize.screenSize.width,
+                    height: 48,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(50.0)),
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/images/google_icon.png',
+                            width: 24, height: 24, fit: BoxFit.fill),
+                        const SizedBox(width: 40.0),
+                        Text('Sign in with Google',
+                            style: GoogleFonts.roboto(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500))
+                      ],
+                    ),
                   ),
                 ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
-                      Get.toNamed(Routes.signUpScreen);
+                      Get.offNamed(Routes.signUpScreen);
                     },
                     child: Text('New Member?',
                         style: GoogleFonts.roboto(

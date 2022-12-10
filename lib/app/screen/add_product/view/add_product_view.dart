@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rentx/app/domain/screen_size.dart';
+import 'package:rentx/app/routes/app_page.dart';
 import 'package:rentx/app/screen/add_product/controller/add_product_controller.dart';
 import 'package:rentx/app/widget/custom_textfield.dart';
 
@@ -20,19 +23,22 @@ class AddProductView extends GetWidget<AddProductController> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async{
-        if(controller.currentPage==0)
-          {
-            Get.back();
-          }
-        else
-          {
-            controller.carouselController2.previousPage(duration: 300.milliseconds,curve: Curves.ease);
-          }
+      onWillPop: () async {
+        if (controller.currentPage == 0) {
+          Get.offNamed(Routes.homeScreen);
+        } else {
+          controller.carouselController2
+              .previousPage(duration: 300.milliseconds, curve: Curves.ease);
+        }
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
+          leading: GestureDetector(
+              onTap: () {
+                Get.offNamed(Routes.homeScreen);
+              },
+              child: const Icon(Icons.arrow_back)),
           iconTheme: IconThemeData(color: Colors.grey[800]),
           backgroundColor: const Color.fromARGB(255, 250, 248, 248),
           title: Row(children: [
@@ -70,10 +76,10 @@ class AddProductView extends GetWidget<AddProductController> {
                 },
                 viewportFraction: 1.0)),
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 25.0),
+          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 25.0),
           child: GestureDetector(
             onTap: () {
-                controller.nextPage();
+              controller.nextPage();
             },
             child: SizedBox(
               width: ScreenSize.screenSize.width,
@@ -107,8 +113,8 @@ class UploadPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 20.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20.0),
           child: Text(
             "Upload photos of product you are selling ",
             style: GoogleFonts.roboto(
@@ -123,7 +129,7 @@ class UploadPhoto extends StatelessWidget {
         Obx(() => Container(
               width: MediaQuery.of(context).size.width,
               color: Colors.blue.shade50,
-              child: controller.uploadedPath.length == 0
+              child: controller.uploadedPath.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 65),
@@ -303,7 +309,7 @@ class UploadPhoto extends StatelessWidget {
                                       width: MediaQuery.of(context).size.width,
                                       fit: BoxFit.contain,
                                     ),
-                                    controller.uploadedPath.length > 0
+                                    controller.uploadedPath.isNotEmpty
                                         ? Align(
                                             alignment: Alignment.topRight,
                                             child: Padding(
@@ -365,8 +371,8 @@ class UploadPhoto extends StatelessWidget {
                       ),
                     ),
             )),
-        Obx(() => (controller.uploadedPath.length > 0 &&
-                controller.uploadedPath.length > 0)
+        Obx(() => (controller.uploadedPath.isNotEmpty &&
+                controller.uploadedPath.isNotEmpty)
             ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Align(
@@ -531,7 +537,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
@@ -652,7 +659,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
                 DropdownButtonFormField(
                   onChanged: (value) {
                     setState(() {
-                      controller.condition.text=value!;
+                      controller.condition.text = value!;
                     });
                   },
                   isDense: true,
@@ -724,15 +731,14 @@ class PriceDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 20.0),
-              child: Text(
-                "Price details",
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 20.0),
+              child: Text("Price details",
                   style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 18.0,
-                      fontWeight: FontWeight.w500)
-              ),
+                      fontWeight: FontWeight.w500)),
             ),
             const SizedBox(height: 10),
             Padding(
@@ -798,9 +804,8 @@ class CategoryItem extends StatelessWidget {
     return InkWell(
         onTap: onTap,
         child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0)
-          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
           elevation: 5.0,
           child: Container(
             height: 113,

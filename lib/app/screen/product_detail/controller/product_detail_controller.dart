@@ -1,15 +1,12 @@
 import 'package:get/get.dart';
 import 'package:rentx/app/model/product_model.dart';
 
-class ProductDetailController extends GetxController
-{
-
+class ProductDetailController extends GetxController {
   ProductModel? productModel;
 
-    @override
+  @override
   void onInit() {
-      print(Get.arguments.runtimeType);
-      productModel=Get.arguments;
+    productModel = Get.arguments;
     super.onInit();
   }
 }
