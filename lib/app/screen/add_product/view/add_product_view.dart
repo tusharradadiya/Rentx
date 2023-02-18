@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -79,7 +80,40 @@ class AddProductView extends GetWidget<AddProductController> {
           padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 25.0),
           child: GestureDetector(
             onTap: () {
-              controller.nextPage();
+              if (controller.currentPage == 0) {
+                if (controller.photo.isNotEmpty) {
+                  controller.nextPage();
+                } else {
+                  Fluttertoast.showToast(msg: 'At Least Select One Image');
+                }
+              } else if (controller.currentPage == 1) {
+                controller.nextPage();
+              } else if (controller.currentPage == 2) {
+                if (controller.formkey1.currentState!.validate()) {
+                  controller.nextPage();
+                }
+              } else if (controller.currentPage == 3) {
+                if (controller.formkey3.currentState!.validate()) {
+                  controller.addProduct(
+                      category: controller.categoryData.value,
+                      location: controller.addressValue.value,
+                      price: controller.price.text,
+                      productName: controller.title.text,
+                      productImage: controller.uploadedPath,
+                      condition: controller.condition.text,
+                      brand: controller.brand.text,
+                      discription: controller.description.text,
+                      phone: controller.mobileNumber.text,
+                      deposit: controller.deposit.text,
+                      userName: controller.localRepositoryInterFace
+                          .getUser()
+                          .username,
+                      userProfileImage: controller.localRepositoryInterFace
+                              .getUser()
+                              .profileImage ??
+                          '');
+                }
+              }
             },
             child: SizedBox(
               width: ScreenSize.screenSize.width,
@@ -508,7 +542,7 @@ class UploadPhoto extends StatelessWidget {
                             ),
                             isScrollControlled: true);
                       },
-                      child: Image.asset('assets/add_photo.png',
+                      child: Image.asset('assets/images/add_photo.png',
                           width: 80, height: 80, fit: BoxFit.fill)),
                 ),
               )
@@ -564,16 +598,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                 onTap: () {
                                   addProductController.selectedIndex.value =
                                       index;
-                                  addProductController.categoryData =
+                                  addProductController.categoryData.value =
                                       categoryItemList[index].label;
-                                  if (addProductController.categoryData ==
-                                      'Cars/Bikes') {
-                                    addProductController.isMachineParts.value =
-                                        true;
-                                  } else {
-                                    addProductController.isMachineParts.value =
-                                        false;
-                                  }
                                 },
                                 isSelected:
                                     addProductController.selectedIndex.value ==
@@ -657,6 +683,12 @@ class _GeneralInformationState extends State<GeneralInformation> {
                   height: 6,
                 ),
                 DropdownButtonFormField(
+                  validator: (value) {
+                    if (value == 'Choose condition') {
+                      return 'Please Select Value';
+                    }
+                    return null;
+                  },
                   onChanged: (value) {
                     setState(() {
                       controller.condition.text = value!;
@@ -757,20 +789,70 @@ class PriceDetails extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Address*'),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  DropdownButtonFormField(
+                      validator: (value) {
+                        if (value == 'Select Address') {
+                          return 'Please Select Value';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        controller.addressValue(value as String);
+                      },
+                      isDense: true,
+                      value: controller.addressValue.value,
+                      // style: GoogleFonts.ibmPlexSans(fontSize: 14.0,fontWeight: FontWeight.w400,color: Color(0xffAFAFAF)),
+                      hint: const Text("Select a Address"),
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 15),
+                          border: OutlineInputBorder()),
+                      items: controller.addressAreaList
+                          .map(
+                            (element) => DropdownMenuItem(
+                              value: element,
+                              child: Text(element),
+                            ),
+                          )
+                          .toList()),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: CustomFormField(
-                  controller: controller.price,
-                  label: 'Address *',
-                  hintText: 'Enter Address',
-                  maxLength: 10,
                   isnum: true,
+                  controller: controller.deposit,
+                  label: 'Deposit *',
+                  hintText: 'Enter Deposit',
+                  maxLength: 10,
                   validator: (String? value) {
                     if (value! == '') {
                       return '* Required';
                     }
                   }),
             ),
-            const SizedBox(
-              height: 25,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomFormField(
+                  isnum: true,
+                  controller: controller.mobileNumber,
+                  label: 'Mobile Number *',
+                  hintText: 'Enter Mobile Number',
+                  maxLength: 10,
+                  validator: (String? value) {
+                    if (value! == '') {
+                      return '* Required';
+                    }
+                  }),
             ),
           ],
         ),
@@ -801,7 +883,7 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
         onTap: onTap,
         child: Card(
           shape:
@@ -812,6 +894,11 @@ class CategoryItem extends StatelessWidget {
             width: 100,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+                color: const Color(0xffF6F6F6),
+                border: Border.all(
+                    color: isSelected ? Colors.blue : Colors.transparent),
+                borderRadius: BorderRadius.circular(16.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

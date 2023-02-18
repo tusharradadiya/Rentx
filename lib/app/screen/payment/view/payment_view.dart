@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pay/pay.dart';
 import 'package:rentx/app/domain/screen_size.dart';
-import 'package:rentx/app/routes/app_page.dart';
 import 'package:rentx/app/screen/payment/controller/payment_controller.dart';
+
+enum PaymentMode { paywithonline, cashondelivery }
 
 class PaymentView extends GetWidget<PaymentController> {
   const PaymentView({super.key});
@@ -43,11 +42,11 @@ class PaymentView extends GetWidget<PaymentController> {
                       children: [
                         const Icon(Icons.person),
                         const SizedBox(width: 15.0),
-                        Text('Vijay Laheri',
+                        Obx(() => Text(controller.name.value,
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 17.0,
-                                fontWeight: FontWeight.w400)),
+                                fontWeight: FontWeight.w400))),
                       ],
                     ),
                     Padding(
@@ -56,11 +55,11 @@ class PaymentView extends GetWidget<PaymentController> {
                         children: [
                           const Icon(Icons.location_on_outlined),
                           const SizedBox(width: 15.0),
-                          Text('Mota Varachha',
+                          Obx(() => Text(controller.address.value,
                               style: GoogleFonts.roboto(
                                   color: Colors.black,
                                   fontSize: 17.0,
-                                  fontWeight: FontWeight.w400)),
+                                  fontWeight: FontWeight.w400))),
                         ],
                       ),
                     ),
@@ -68,11 +67,11 @@ class PaymentView extends GetWidget<PaymentController> {
                       children: [
                         const Icon(Icons.call),
                         const SizedBox(width: 15.0),
-                        Text('+919537888243',
+                        Obx(() => Text(controller.phone.value,
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
                                 fontSize: 17.0,
-                                fontWeight: FontWeight.w400)),
+                                fontWeight: FontWeight.w400))),
                       ],
                     )
                   ],
@@ -96,24 +95,29 @@ class PaymentView extends GetWidget<PaymentController> {
                   children: [
                     Row(
                       children: [
-                        Radio(
-                          value: true,
-                          groupValue: true,
-                          onChanged: (value) {},
-                        ),
-                        RawGooglePayButton(
-                          type: GooglePayButtonType.pay,
-                          onPressed: controller.onGooglePayPressed,
-                        ),
+                        Obx(() => Radio(
+                              value: PaymentMode.paywithonline,
+                              groupValue: controller.paymentMode.value,
+                              onChanged: (value) {
+                                controller.paymentMode.value = value!;
+                              },
+                            )),
+                        Text('Pay With Online',
+                            style: GoogleFonts.roboto(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w500)),
                       ],
                     ),
                     Row(
                       children: [
-                        Radio(
-                          value: false,
-                          groupValue: true,
-                          onChanged: (value) {},
-                        ),
+                        Obx(() => Radio(
+                              value: PaymentMode.cashondelivery,
+                              groupValue: controller.paymentMode.value,
+                              onChanged: (value) {
+                                controller.paymentMode.value = value!;
+                              },
+                            )),
                         Text('Cash On Delivery',
                             style: GoogleFonts.roboto(
                                 color: Colors.black,
@@ -140,18 +144,27 @@ class PaymentView extends GetWidget<PaymentController> {
                             fontSize: 20.0,
                             fontWeight: FontWeight.w600)),
                     const Spacer(),
-                    Text('10,000/-',
+                    Obx(() => Text('₹${controller.totalAmount.value}',
                         style: GoogleFonts.roboto(
                             color: Colors.blue,
                             fontSize: 20.0,
-                            fontWeight: FontWeight.w600)),
+                            fontWeight: FontWeight.w600))),
                   ],
                 ),
               ),
             ),
             GestureDetector(
               onTap: () {
-                Get.toNamed(Routes.orderSuccesfullyView);
+                if (controller.paymentMode.value == PaymentMode.paywithonline) {
+                  controller.makePayment(
+                      controller.totalAmount.value,
+                      controller.name.value,
+                      controller.phone.value,
+                      controller.localRepositoryInterFace.getUser().emailId,
+                      controller.productModel?.productName ?? '');
+                } else {
+                  controller.makeCODOrder();
+                }
               },
               child: SizedBox(
                 width: ScreenSize.screenSize.width,

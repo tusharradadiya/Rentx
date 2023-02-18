@@ -43,6 +43,7 @@ class CustomFormField extends StatelessWidget {
             inputFormatters: isnum
                 ? [
                     FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10)
                   ]
                 : desc
                     ? []

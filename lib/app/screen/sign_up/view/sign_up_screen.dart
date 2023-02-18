@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rentx/app/domain/screen_size.dart';
@@ -29,7 +30,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
         backgroundColor: const Color(0xffE5E5E5),
         body: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Form(
             key: controller.signUpformKey,
             child: SingleChildScrollView(
@@ -37,6 +38,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 15.0),
                   Text(
                     'Name',
                     style: GoogleFonts.roboto(
@@ -54,6 +56,11 @@ class SignUpScreen extends GetWidget<SignUpController> {
                         }
                         return null;
                       },
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[a-z A-Z á-ú Á-Ú]")),
+                      ],
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.redAccent.withOpacity(0.10),
@@ -114,6 +121,50 @@ class SignUpScreen extends GetWidget<SignUpController> {
                               borderSide:
                                   const BorderSide(color: Colors.redAccent)),
                           hintText: 'Please Enter your Email Id'),
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
+                  Text(
+                    'Phone Number',
+                    style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(10)
+                      ],
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please Enter Phone Number';
+                        }
+                        return null;
+                      },
+                      controller: controller.phoneController,
+                      decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.redAccent.withOpacity(0.10),
+                          prefixIcon: const Icon(Icons.person,
+                              color: Colors.redAccent, size: 26),
+                          isDense: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(80),
+                              borderSide:
+                                  const BorderSide(color: Colors.redAccent)),
+                          disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(80),
+                              borderSide:
+                                  const BorderSide(color: Colors.redAccent)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(80),
+                              borderSide:
+                                  const BorderSide(color: Colors.redAccent)),
+                          hintText: 'Please Enter your Phone Number'),
                     ),
                   ),
                   const SizedBox(height: 15.0),
@@ -220,7 +271,6 @@ class SignUpScreen extends GetWidget<SignUpController> {
                               hintText: 'Please Enter Confirm Password'),
                         )),
                   ),
-                  const SizedBox(height: 15.0),
                   const SizedBox(height: 40.0),
                   GestureDetector(
                     onTap: () {
@@ -228,7 +278,8 @@ class SignUpScreen extends GetWidget<SignUpController> {
                         controller.handleEmailSignIn(
                             controller.emailController.text,
                             controller.passwordController.text,
-                            controller.nameController.text);
+                            controller.nameController.text,
+                            controller.phoneController.text);
                       }
                     },
                     child: SizedBox(

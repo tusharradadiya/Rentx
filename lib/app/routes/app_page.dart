@@ -11,6 +11,8 @@ import 'package:rentx/app/screen/login/binding/login_binding.dart';
 import 'package:rentx/app/screen/login/view/login_screen.dart';
 import 'package:rentx/app/screen/my_product/binding/my_product_binding.dart';
 import 'package:rentx/app/screen/my_product/view/my_product_view.dart';
+import 'package:rentx/app/screen/my_product_history/binding/my_product_history_binding.dart';
+import 'package:rentx/app/screen/my_product_history/view/my_product_history_view.dart';
 import 'package:rentx/app/screen/order_checkout/binding/order_checkout_binding.dart';
 import 'package:rentx/app/screen/order_checkout/view/order_checkout_view.dart';
 import 'package:rentx/app/screen/order_history/binding/order_history_binding.dart';
@@ -98,6 +100,11 @@ class AppPages {
       name: _Paths.orderHistory,
       page: () => const OrderHistoryView(),
       binding: OrderHistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.myProductHistory,
+      page: () => MyProductHistoryView(),
+      binding: MyProductHistoryBinding(),
     )
   ];
 }

@@ -4,6 +4,7 @@ import 'package:rentx/app/screen/order_checkout/controller/order_checkout_contro
 class OrderCheckoutBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<OrderCheckoutController>(() => OrderCheckoutController());
+    Get.lazyPut<OrderCheckoutController>(
+        () => OrderCheckoutController(Get.find()));
   }
 }

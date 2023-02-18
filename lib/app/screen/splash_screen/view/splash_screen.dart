@@ -24,23 +24,24 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     ScreenSize.screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/images/splash.jpg',
-            height: 300,
+            'assets/images/app_logo.png',
+            height: 200,
             width: ScreenSize.screenSize.width,
-            fit: BoxFit.fill,
+            fit: BoxFit.contain,
           ),
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 40.0),
           Text(
             'RentX',
             style: GoogleFonts.roboto(
-                color: Colors.black,
-                fontSize: 30.0,
-                fontWeight: FontWeight.w500),
-          )
+                color: Colors.white,
+                fontSize: 35.0,
+                fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );

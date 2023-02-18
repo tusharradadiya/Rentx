@@ -4,6 +4,6 @@ import 'package:rentx/app/screen/add_product/controller/add_product_controller.d
 class AddProductBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddProductController>(() => AddProductController());
+    Get.lazyPut<AddProductController>(() => AddProductController(Get.find()));
   }
 }

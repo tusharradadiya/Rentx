@@ -8,10 +8,13 @@ class CategoryDetailController extends GetxController {
 
   var productList = <ProductModel>[].obs;
   RxString category = ''.obs;
+  RxBool isDataFetch = false.obs;
 
   Future<void> fetchProductData(String category) async {
+    productList.clear();
     await productCollection
         .where('category', isEqualTo: category)
+        .where('isAvailable', isEqualTo: true)
         .get()
         .then((productData) {
       if (productData.docs.isNotEmpty) {
@@ -31,5 +34,12 @@ class CategoryDetailController extends GetxController {
     fetchProductData(Get.arguments);
     category.value = Get.arguments;
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    Future.delayed(const Duration(seconds: 2))
+        .then((value) => isDataFetch.value = true);
+    super.onReady();
   }
 }

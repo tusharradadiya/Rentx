@@ -13,13 +13,16 @@ class LocalRepositoryInterFace {
   final _pref_email = 'email';
   final _pref_image = 'profileImage';
   final _pref_createdAt = 'createdAt';
-
+  final _pref_phone = 'phone';
+  final _pref_emailVerified = 'emailVerified';
   UserModel getUser() {
     var user = UserModel(
         userId: box.get(_pref_userId) ?? '',
         username: box.get(_pref_username) ?? '',
         emailId: box.get(_pref_email) ?? '',
         createdAt: box.get(_pref_createdAt) ?? DateTime.now(),
+        phone: box.get(_pref_phone) ?? '',
+        emailVerified: box.get(_pref_emailVerified) ?? false,
         profileImage: box.get(_pref_image) ?? '');
     return user;
   }
@@ -30,6 +33,8 @@ class LocalRepositoryInterFace {
     await box.put(_pref_email, user.emailId);
     await box.put(_pref_createdAt, user.createdAt);
     await box.put(_pref_image, user.profileImage);
+    await box.put(_pref_phone, user.phone);
+    await box.put(_pref_emailVerified, user.emailVerified);
   }
 
   String getUserId() {

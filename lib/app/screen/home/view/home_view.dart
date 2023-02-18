@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rentx/app/domain/screen_size.dart';
 import 'package:rentx/app/routes/app_page.dart';
 import 'package:rentx/app/screen/home/controller/home_controller.dart';
+import 'package:rentx/app/screen/term_conditions.dart';
 
 class HomeView extends GetWidget<HomeController> {
   const HomeView({super.key});
@@ -121,10 +123,30 @@ class HomeView extends GetWidget<HomeController> {
                     ),
                     const Divider(thickness: 1.0, height: 10.0),
                     ListTile(
+                      onTap: () {
+                        Get.back();
+                        Get.to(const TermConditions());
+                      },
                       dense: true,
                       leading: const Icon(Icons.contacts_sharp),
                       title: Text(
-                        'Contact Us',
+                        'Terms & Conditions',
+                        style: GoogleFonts.roboto(
+                            color: Colors.black,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    const Divider(thickness: 1.0, height: 10.0),
+                    ListTile(
+                      onTap: () {
+                        Get.back();
+                        Get.offNamed(Routes.myProductHistoryView);
+                      },
+                      dense: true,
+                      leading: const Icon(Icons.history),
+                      title: Text(
+                        'My Order History',
                         style: GoogleFonts.roboto(
                             color: Colors.black,
                             fontSize: 18.0,
@@ -157,237 +179,243 @@ class HomeView extends GetWidget<HomeController> {
           backgroundColor: Colors.redAccent,
           title: const Text('RentX'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 25.0),
-                  child: TextFormField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: const Icon(Icons.search,
-                            color: Colors.redAccent, size: 26),
-                        isDense: true,
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(80),
-                            borderSide:
-                                const BorderSide(color: Colors.redAccent)),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(80),
-                            borderSide:
-                                const BorderSide(color: Colors.redAccent)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(80),
-                            borderSide:
-                                const BorderSide(color: Colors.redAccent)),
-                        hintText: 'Please Enter Product Name'),
-                  ),
-                ),
-                Text(
-                  'Categories',
-                  style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.categoryDetailView,
-                            arguments: 'Car');
-                      },
-                      child: Card(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/images/car_image.png',
-                                width: ScreenSize.screenSize.width * 0.15,
-                                fit: BoxFit.fill,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                'Car',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.categoryDetailView,
-                            arguments: 'Bike');
-                      },
-                      child: Card(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/images/bike.png',
-                                width: ScreenSize.screenSize.width * 0.15,
-                                fit: BoxFit.fill,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                'Bike',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.categoryDetailView,
-                            arguments: 'Mobile');
-                      },
-                      child: Card(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/images/mobile.png',
-                                width: ScreenSize.screenSize.width * 0.15,
-                                height: 38,
-                                fit: BoxFit.fill,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                'Mobile',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.categoryDetailView,
-                            arguments: 'Camera');
-                      },
-                      child: Card(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/images/camera-8409.png',
-                                width: ScreenSize.screenSize.width * 0.15,
-                                height: 38,
-                                fit: BoxFit.fill,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                'Camera',
-                                style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                Row(
-                  children: [
-                    Text(
-                      'Popular Categories',
-                      style: GoogleFonts.roboto(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.popularProductView);
-                      },
-                      child: Text(
-                        'See All',
+        body: Obx(() => controller.isDataFetch.value
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 25.0),
+                      //   child: TextFormField(
+                      //     readOnly: true,
+                      //     decoration: InputDecoration(
+                      //         filled: true,
+                      //         fillColor: Colors.white,
+                      //         prefixIcon: const Icon(Icons.search,
+                      //             color: Colors.redAccent, size: 26),
+                      //         isDense: true,
+                      //         enabledBorder: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(80),
+                      //             borderSide:
+                      //                 const BorderSide(color: Colors.redAccent)),
+                      //         disabledBorder: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(80),
+                      //             borderSide:
+                      //                 const BorderSide(color: Colors.redAccent)),
+                      //         focusedBorder: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(80),
+                      //             borderSide:
+                      //                 const BorderSide(color: Colors.redAccent)),
+                      //         hintText: 'Please Enter Product Name'),
+                      //   ),
+                      // ),
+                      const SizedBox(height: 20.0),
+                      Text(
+                        'Categories',
                         style: GoogleFonts.roboto(
                             color: Colors.black,
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Obx(
-                    () => GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: controller.productList.length > 4
-                            ? 6
-                            : controller.productList.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 0.8,
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10.0,
-                                mainAxisSpacing: 10.0),
-                        itemBuilder: (context, index) {
-                          return productCard(
-                            controller.productList[index].productImage,
-                            controller.productList[index].productName,
-                            controller.productList[index].location,
-                            controller.productList[index].price,
-                            controller.productList[index].rating,
-                            () {
-                              Get.toNamed(Routes.productDetailView,
-                                  arguments: controller.productList[index]);
+                      const SizedBox(height: 10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.categoryDetailView,
+                                  arguments: 'Car');
                             },
-                          );
-                        }),
+                            child: Card(
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/car_image.png',
+                                      width: ScreenSize.screenSize.width * 0.15,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Text(
+                                      'Car',
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.categoryDetailView,
+                                  arguments: 'Bike');
+                            },
+                            child: Card(
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/bike.png',
+                                      width: ScreenSize.screenSize.width * 0.15,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Text(
+                                      'Bike',
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.categoryDetailView,
+                                  arguments: 'Mobile');
+                            },
+                            child: Card(
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/mobile.png',
+                                      width: ScreenSize.screenSize.width * 0.15,
+                                      height: 38,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Text(
+                                      'Mobile',
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.categoryDetailView,
+                                  arguments: 'Camera');
+                            },
+                            child: Card(
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/camera-8409.png',
+                                      width: ScreenSize.screenSize.width * 0.15,
+                                      height: 38,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Text(
+                                      'Camera',
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      Row(
+                        children: [
+                          Text(
+                            'Popular Categories',
+                            style: GoogleFonts.roboto(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.popularProductView);
+                            },
+                            child: Text(
+                              'See All',
+                              style: GoogleFonts.roboto(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                        child: Obx(
+                          () => GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: controller.productList.length > 4
+                                  ? 6
+                                  : controller.productList.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 0.80,
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 10.0,
+                                      mainAxisSpacing: 10.0),
+                              itemBuilder: (context, index) {
+                                return productCard(
+                                  controller.productList[index].productImage[0],
+                                  controller.productList[index].productName,
+                                  controller.productList[index].location,
+                                  controller.productList[index].price,
+                                  controller.productList[index].rating,
+                                  () {
+                                    Get.toNamed(Routes.productDetailView,
+                                        arguments:
+                                            controller.productList[index]);
+                                  },
+                                );
+                              }),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(color: Colors.black),
+              )),
       ),
     );
   }
@@ -406,31 +434,59 @@ Widget productCard(String productImage, String productname, String location,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                productImage,
-                width: ScreenSize.screenSize.width * 0.40,
-                height: 80,
+              CachedNetworkImage(
+                imageUrl: productImage,
+                height: 90,
+                width: ScreenSize.screenSize.width * 40,
                 fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 10.0),
-              Text(
-                productname,
-                style: GoogleFonts.roboto(
-                    color: Colors.black,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w500),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3.0),
-                child: Text(
-                  location,
-                  style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400),
+                placeholder: (context, url) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  );
+                },
+                errorWidget: (context, url, dynamic error) => Image.asset(
+                  'assets/images/error-icon-25242.png',
+                  fit: BoxFit.cover,
                 ),
+              ),
+              const SizedBox(height: 12.0),
+              productname.length > 15
+                  ? Text(
+                      productname.replaceRange(15, productname.length, '...'),
+                      style: GoogleFonts.roboto(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500),
+                    )
+                  : Text(
+                      productname.capitalizeFirst ?? '',
+                      style: GoogleFonts.roboto(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500),
+                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: location.length > 17
+                    ? Text(
+                        location.replaceRange(17, location.length, '...'),
+                        style: GoogleFonts.roboto(
+                            color: Colors.black,
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w400),
+                      )
+                    : Text(
+                        location.capitalizeFirst ?? '',
+                        style: GoogleFonts.roboto(
+                            color: Colors.black,
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w400),
+                      ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3.0),
@@ -438,27 +494,11 @@ Widget productCard(String productImage, String productname, String location,
                   '₹ $price/ Day',
                   style: GoogleFonts.roboto(
                       color: Colors.black,
-                      fontSize: 12.0,
+                      fontSize: 13.0,
                       fontWeight: FontWeight.w400),
                 ),
               ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.orange,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 5.0),
-                  Text(
-                    rating,
-                    style: GoogleFonts.roboto(
-                        color: Colors.black,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              )
+              const SizedBox(height: 6.0),
             ],
           ),
         ),

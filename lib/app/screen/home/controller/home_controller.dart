@@ -9,22 +9,25 @@ class HomeController extends GetxController {
   final LocalRepositoryInterFace localRepositoryInterFace;
   final CollectionReference productCollection =
       FirebaseFirestore.instance.collection('Product');
-
+  RxBool isDataFetch = false.obs;
   var productList = <ProductModel>[].obs;
 
   HomeController(this.localRepositoryInterFace);
 
   Future<void> fetchProductData() async {
+    productList.clear();
     await productCollection
-        .where('id', isNotEqualTo: '')
+        .where('user_id', isNotEqualTo: localRepositoryInterFace.getUserId())
         .get()
         .then((productData) {
       if (productData.docs.isNotEmpty) {
         for (var element in productData.docs) {
           Map<String, dynamic> object = element.data() as Map<String, dynamic>;
           ProductModel product = ProductModel.fromJson(object);
-          if (!productList.contains(product)) {
-            productList.add(product);
+          if (product.isAvailable == true) {
+            if (!productList.contains(product)) {
+              productList.add(product);
+            }
           }
         }
       }
@@ -42,5 +45,12 @@ class HomeController extends GetxController {
   void onInit() {
     fetchProductData();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    Future.delayed(const Duration(seconds: 2))
+        .then((value) => isDataFetch.value = true);
+    super.onReady();
   }
 }

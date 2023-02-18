@@ -17,6 +17,7 @@ abstract class Routes {
   static const paymentView = _Paths.paymentView;
   static const orderSuccesfullyView = _Paths.orderSuccesfully;
   static const orderhistoryView = _Paths.orderHistory;
+  static const myProductHistoryView = _Paths.myProductHistory;
 }
 
 abstract class _Paths {
@@ -34,4 +35,5 @@ abstract class _Paths {
   static const paymentView = '/payment-view';
   static const orderSuccesfully = '/order-succesfully';
   static const orderHistory = '/order-history';
+  static const myProductHistory = '/my-product-history';
 }

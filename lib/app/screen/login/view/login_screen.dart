@@ -15,7 +15,7 @@ class LoginScreen extends GetWidget<LoginController> {
       backgroundColor: const Color(0xffE5E5E5),
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Form(
@@ -23,6 +23,7 @@ class LoginScreen extends GetWidget<LoginController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 15.0),
                 Text(
                   'Welcome Back!',
                   style: GoogleFonts.roboto(

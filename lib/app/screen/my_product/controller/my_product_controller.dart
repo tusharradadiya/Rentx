@@ -13,6 +13,7 @@ class MyProductController extends GetxController {
   MyProductController(this.localRepositoryInterFace);
 
   Future<void> fetchProductData(String userId) async {
+    productList.clear();
     await productCollection
         .where('user_id', isEqualTo: userId)
         .get()

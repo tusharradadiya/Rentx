@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rentx/app/domain/repository/local_repository_interface.dart';
@@ -43,7 +44,10 @@ class LoginController extends GetxController {
       localRepositoryInterFace.saveUserId(firebaseUser?.uid ?? '');
       localRepositoryInterFace.saveUser(UserModel.fromSnapshot(result));
       localRepositoryInterFace.writeOnBoardingPageLoaded();
-
+      await FirebaseFirestore.instance
+          .collection('User')
+          .doc(firebaseUser?.uid)
+          .update(userInfo.toJson());
       emailController.clear();
       passwordController.clear();
       Get.offNamed(Routes.homeScreen);
@@ -52,8 +56,10 @@ class LoginController extends GetxController {
         'createdAt': DateTime.now(),
         'username': firebaseUser?.displayName,
         'emailId': firebaseUser?.email,
-        'profileImage': firebaseUser?.photoURL,
+        'emailVerified': firebaseUser?.emailVerified,
+        'profileImage': firebaseUser?.photoURL ?? '',
         'userId': firebaseUser?.uid,
+        'phone': firebaseUser?.phoneNumber ?? ''
       });
       await FirebaseFirestore.instance
           .collection('User')
@@ -75,23 +81,32 @@ class LoginController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         String uid = value.user!.uid;
-        localRepositoryInterFace.saveUserId(uid);
-        await userCollection
-            .where('userId', isEqualTo: uid)
-            .get()
-            .then((value) {
-          Map<String, dynamic> object =
-              value.docs.first.data() as Map<String, dynamic>;
-          localRepositoryInterFace.saveUser(UserModel(
-              createdAt: object['createdAt'].toDate() ?? '',
-              username: object['username'] ?? '',
-              emailId: object['emailId'] ?? '',
-              profileImage: object['profileImage'] ?? '',
-              userId: object['userId'] ?? ''));
-          localRepositoryInterFace.writeOnBoardingPageLoaded();
-        });
+        if (value.user?.emailVerified == true) {
+          localRepositoryInterFace.saveUserId(uid);
+          await userCollection
+              .where('userId', isEqualTo: uid)
+              .get()
+              .then((value) {
+            Map<String, dynamic> object =
+                value.docs.first.data() as Map<String, dynamic>;
+            localRepositoryInterFace.saveUser(UserModel(
+                phone: object['phone'] ?? '',
+                emailVerified: object['emailVerified'] ?? false,
+                createdAt: object['createdAt'].toDate() ?? '',
+                username: object['username'] ?? '',
+                emailId: object['emailId'] ?? '',
+                profileImage: object['profileImage'] ?? '',
+                userId: object['userId'] ?? ''));
+            localRepositoryInterFace.writeOnBoardingPageLoaded();
+            Get.offNamed(Routes.homeScreen);
+          });
+        } else {
+          Get.back();
+          Get.focusScope?.unfocus();
+          Fluttertoast.showToast(
+              msg: 'PLease Check Your Email and Verified EmailID');
+        }
       });
-      Get.offNamed(Routes.homeScreen);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
       } else if (e.code == 'wrong-password') {}

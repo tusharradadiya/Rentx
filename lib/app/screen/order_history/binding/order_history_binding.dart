@@ -4,6 +4,7 @@ import 'package:rentx/app/screen/order_history/controller/order_history_controll
 class OrderHistoryBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<OrderHistoryController>(() => OrderHistoryController());
+    Get.lazyPut<OrderHistoryController>(
+        () => OrderHistoryController(Get.find()));
   }
 }
